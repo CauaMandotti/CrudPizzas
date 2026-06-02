@@ -9,16 +9,36 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="400.0" prefWidth="472.0" style="-fx-background-color: FFD700;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.MainController">
+<AnchorPane prefHeight="522.0" prefWidth="664.0" style="-fx-background-color: FFD700;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.MainController">
    <children>
-      <Circle fill="#ff491f" layoutX="171.0" layoutY="128.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff491f" layoutX="409.0" layoutY="149.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff491f" layoutX="422.0" layoutY="45.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff491f" layoutX="307.0" layoutY="98.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="89.0" layoutY="207.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="604.0" layoutY="178.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="202.0" layoutY="215.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="313.0" layoutY="215.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="112.0" layoutY="51.0" prefHeight="17.0" prefWidth="35.0" text="Sabor" />
       <Label layoutX="89.0" layoutY="81.0" prefHeight="17.0" prefWidth="60.0" text="Descricao" />
       <TextField fx:id="txtSabor" layoutX="147.0" layoutY="46.0" />
-      <TableView fx:id="tblPizza" layoutY="150.0" prefHeight="248.0" prefWidth="378.0">
+      <Button fx:id="btnSalvar" layoutX="338.0" layoutY="38.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Salvar" />
+      <Button fx:id="btnAlterar" layoutX="338.0" layoutY="68.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Alterar" />
+      <Button fx:id="btnExcluir" layoutX="338.0" layoutY="98.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Excluir" />
+      <TextField fx:id="txtDescricao" layoutX="147.0" layoutY="76.0" />
+      <TextField fx:id="txttValor" layoutX="147.0" layoutY="106.0" />
+      <Label layoutX="117.0" layoutY="111.0" prefHeight="17.0" prefWidth="29.0" text="Valor" textAlignment="CENTER" />
+      <CheckBox fx:id="chkDisponivel" layoutX="172.0" layoutY="144.0" mnemonicParsing="false" text="Disponivel" />
+      <Circle fill="#ff491f" layoutX="447.0" layoutY="336.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="47.0" layoutY="38.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="431.0" layoutY="215.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff271f" layoutX="50.0" layoutY="120.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="514.0" layoutY="240.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="539.0" layoutY="83.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="589.0" layoutY="475.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="598.0" layoutY="286.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="456.0" layoutY="436.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="58.0" layoutY="436.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="554.0" layoutY="373.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="338.0" layoutY="475.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#ff491f" layoutX="212.0" layoutY="450.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+      <TableView fx:id="tblPizza" layoutX="23.0" layoutY="255.0" prefHeight="248.0" prefWidth="378.0">
         <columns>
           <TableColumn fx:id="colId" prefWidth="75.0" text="id" />
           <TableColumn fx:id="colSabor" prefWidth="75.0" text="sabor" />
@@ -27,17 +47,6 @@
             <TableColumn fx:id="colDisponivel" prefWidth="75.0" text="disponivel" />
         </columns>
       </TableView>
-      <Button fx:id="btnSalvar" layoutX="338.0" layoutY="38.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Salvar" />
-      <Button fx:id="btnAlterar" layoutX="338.0" layoutY="68.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Alterar" />
-      <Button fx:id="btnExcluir" layoutX="338.0" layoutY="98.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" text="Excluir" />
-      <TextField fx:id="txtDescricao" layoutX="147.0" layoutY="76.0" />
-      <TextField fx:id="txttValor" layoutX="147.0" layoutY="106.0" />
-      <Label layoutX="117.0" layoutY="111.0" prefHeight="17.0" prefWidth="29.0" text="Valor" textAlignment="CENTER" />
-      <CheckBox fx:id="chkDisponivel" layoutX="187.0" layoutY="16.0" mnemonicParsing="false" text="Disponivel" />
-      <Circle fill="#ff491f" layoutX="415.0" layoutY="352.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff491f" layoutX="447.0" layoutY="235.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff491f" layoutX="50.0" layoutY="38.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="#ff271f" layoutX="50.0" layoutY="120.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
    </children>
 
 </AnchorPane>

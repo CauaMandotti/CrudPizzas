@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 
 public class PizzaDAO {
 
-    // Inicializa o Logger para esta classe
     private static final Logger logger = Logger.getLogger(PizzaDAO.class.getName());
 
+    // C - Cadastrar (INSERT)
     public void cadastrarPizza(PizzaDTO pizza) {
         String sql = "INSERT INTO pizzas (sabor, descricao, valor, disponivel) VALUES (?, ?, ?, ?)";
 
@@ -33,6 +33,7 @@ public class PizzaDAO {
         }
     }
 
+    // R - Listar/Selecionar (SELECT)
     public List<PizzaDTO> selecionarPizzas() {
         String sql = "SELECT * FROM pizzas ORDER BY id";
         List<PizzaDTO> lista = new ArrayList<>();
@@ -58,9 +59,10 @@ public class PizzaDAO {
             logger.log(Level.SEVERE, "Erro ao listar pizzas", e);
         }
 
-        return lista; // Retorna a lista para a Tabela do JavaFX
+        return lista;
     }
 
+    // U - Alterar (UPDATE)
     public void alterarPizza(PizzaDTO pizza) {
         String sql = "UPDATE pizzas SET sabor = ?, descricao = ?, valor = ?, disponivel = ? WHERE id = ?";
 
@@ -81,6 +83,7 @@ public class PizzaDAO {
         }
     }
 
+    // D - Excluir (DELETE)
     public void excluirPizza(int id) {
         String sql = "DELETE FROM pizzas WHERE id = ?";
 
@@ -96,3 +99,4 @@ public class PizzaDAO {
             logger.log(Level.SEVERE, "Erro ao excluir pizza", e);
         }
     }
+}
