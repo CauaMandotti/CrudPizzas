@@ -158,7 +158,7 @@ public class MainController {
 
         tblPizza.getItems().clear();
         if (listaPizzas != null) {
-            tblPizza.getItems().addAll(listaPizzas);
+            tblPizza.getItems().addAll(listaPizzas); //comentario
         }
     }
 }
