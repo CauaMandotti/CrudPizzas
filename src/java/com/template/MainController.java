@@ -8,99 +8,147 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import java.util.List;
 
 public class MainController {
 
-    @FXML private TextField txtId;
+    // ID temporário para controle interno (já que não há txtId no FXML)
+    private int idSelecionado = -1;
+
     @FXML private TextField txtSabor;
     @FXML private TextField txtDescricao;
-    @FXML private TextField txtValor;
+
+    // CORRIGIDO: Agora com dois 't's igualzinho ao seu FXML (txttValor)
+    @FXML private TextField txttValor;
+
     @FXML private CheckBox chkDisponivel;
 
-    // Componentes da Tabela
-    @FXML private TableView<PizzaDTO> tblProduto;
+    // Tabela e Colunas (Adicionado colId que estava faltando)
+    @FXML private TableView<PizzaDTO> tblPizza;
+    @FXML private TableColumn<PizzaDTO, Integer> colId; // Adicionado!
     @FXML private TableColumn<PizzaDTO, String> colSabor;
     @FXML private TableColumn<PizzaDTO, String> colDescricao;
     @FXML private TableColumn<PizzaDTO, Double> colValor;
     @FXML private TableColumn<PizzaDTO, Boolean> colDisponivel;
 
-    @FXML private Button btnAdicionar;
-    @FXML private Button btnAlterar;
     @FXML private Button btnCadastrar;
+    @FXML private Button btnAlterar;
+    @FXML private Button btnExcluir;
     @FXML private Button btnLimpar;
 
     @FXML
     private void initialize() {
-        // Vincula as colunas da tabela com os atributos do seu PizzaDTO
+        // Vincula TODAS as colunas com os atributos do PizzaDTO
+        if (colId != null) colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colSabor.setCellValueFactory(new PropertyValueFactory<>("sabor"));
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
         colDisponivel.setCellValueFactory(new PropertyValueFactory<>("disponivel"));
 
-        // Apenas lista as pizzas ao iniciar a tela, sem travar o programa
+        // Carrega os dados do banco na tabela
         carregarPizzas();
     }
 
-    // <-- O MÉTODO DA SUA PROFESSORA ADICIONADO AQUI!
     @FXML
-    private void carregarCampos() {
-        PizzaDTO pizzaDTO = tblProduto.getSelectionModel().getSelectedItem();
+    private void carregarCampos(MouseEvent event) {
+        // Pega a pizza que o usuário clicou na tabela
+        PizzaDTO pizzaDTO = tblPizza.getSelectionModel().getSelectedItem();
 
         if (pizzaDTO != null) {
-            txtId.setText(String.valueOf(pizzaDTO.getId()));
+            idSelecionado = pizzaDTO.getId(); // Guarda o ID para Update e Delete
             txtSabor.setText(pizzaDTO.getSabor());
             txtDescricao.setText(pizzaDTO.getDescricao());
-            txtValor.setText(String.valueOf(pizzaDTO.getValor()));
+            txttValor.setText(String.valueOf(pizzaDTO.getValor()));
             chkDisponivel.setSelected(pizzaDTO.isDisponivel());
         }
     }
 
     @FXML
     private void btnCadastrarAction(ActionEvent event) {
-        PizzaDTO objpizzadto = new PizzaDTO();
-        objpizzadto.setSabor(txtSabor.getText());
-        objpizzadto.setDescricao(txtDescricao.getText());
-        objpizzadto.setValor(Double.parseDouble(txtValor.getText()));
-        objpizzadto.setDisponivel(chkDisponivel.isSelected());
+        try {
+            if (txtSabor.getText().isEmpty() || txttValor.getText().isEmpty()) {
+                System.out.println("Erro: Preencha pelo menos o Sabor e o Valor!");
+                return;
+            }
 
-        PizzaDAO objpizzadao = new PizzaDAO();
-        objpizzadao.cadastrarPizza(objpizzadto);
+            PizzaDTO objpizzadto = new PizzaDTO();
+            objpizzadto.setSabor(txtSabor.getText());
+            objpizzadto.setDescricao(txtDescricao.getText());
 
-        carregarPizzas();
+            // Corrige vírgula caso o usuário digite errado
+            String valorTexto = txttValor.getText().replace(",", ".");
+            objpizzadto.setValor(Double.parseDouble(valorTexto));
+
+            objpizzadto.setDisponivel(chkDisponivel.isSelected());
+
+            PizzaDAO objpizzadao = new PizzaDAO();
+            objpizzadao.cadastrarPizza(objpizzadto);
+
+            carregarPizzas();
+            btnLimparAction(event);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: Digite um preço válido no formato 00.00");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void btnAlterarAction(ActionEvent event) {
-        PizzaDTO objpizzadto = new PizzaDTO();
-        objpizzadto.setId(Integer.parseInt(txtId.getText()));
-        objpizzadto.setSabor(txtSabor.getText());
-        objpizzadto.setDescricao(txtDescricao.getText());
-        objpizzadto.setValor(Double.parseDouble(txtValor.getText()));
-        objpizzadto.setDisponivel(chkDisponivel.isSelected());
+        try {
+            if (idSelecionado == -1) {
+                System.out.println("Erro: Clique em uma pizza na tabela primeiro para poder alterar!");
+                return;
+            }
 
-        PizzaDAO objpizzadao = new PizzaDAO();
-        objpizzadao.alterarPizza(objpizzadto);
+            PizzaDTO objpizzadto = new PizzaDTO();
+            objpizzadto.setId(idSelecionado); // Usa o ID guardado no clique
+            objpizzadto.setSabor(txtSabor.getText());
+            objpizzadto.setDescricao(txtDescricao.getText());
 
-        carregarPizzas();
+            String valorTexto = txttValor.getText().replace(",", ".");
+            objpizzadto.setValor(Double.parseDouble(valorTexto));
+
+            objpizzadto.setDisponivel(chkDisponivel.isSelected());
+
+            PizzaDAO objpizzadao = new PizzaDAO();
+            objpizzadao.alterarPizza(objpizzadto);
+
+            carregarPizzas();
+            btnLimparAction(event);
+
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar os dados.");
+        }
     }
 
     @FXML
     private void btnExcluirAction(ActionEvent event) {
-        int id = Integer.parseInt(txtId.getText());
+        try {
+            if (idSelecionado == -1) {
+                System.out.println("Erro: Selecione uma pizza na tabela para excluir!");
+                return;
+            }
 
-        PizzaDAO objpizzadao = new PizzaDAO();
-        objpizzadao.excluirPizza(id);
+            PizzaDAO objpizzadao = new PizzaDAO();
+            objpizzadao.excluirPizza(idSelecionado);
 
-        carregarPizzas();
+            carregarPizzas();
+            btnLimparAction(event);
+
+        } catch (Exception e) {
+            System.out.println("Erro ao excluir.");
+        }
     }
 
     @FXML
     private void btnLimparAction(ActionEvent event) {
-        txtId.clear();
+        idSelecionado = -1; // Reseta o ID selecionado
         txtSabor.clear();
         txtDescricao.clear();
-        txtValor.clear();
+        txttValor.clear();
         chkDisponivel.setSelected(false);
     }
 
@@ -108,7 +156,9 @@ public class MainController {
         PizzaDAO objpizzadao = new PizzaDAO();
         List<PizzaDTO> listaPizzas = objpizzadao.selecionarPizzas();
 
-        tblProduto.getItems().clear();
-        tblProduto.getItems().addAll(listaPizzas);
+        tblPizza.getItems().clear();
+        if (listaPizzas != null) {
+            tblPizza.getItems().addAll(listaPizzas);
+        }
     }
 }
