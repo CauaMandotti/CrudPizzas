@@ -16,6 +16,14 @@
 
 <AnchorPane prefHeight="461.0" prefWidth="830.0" style="-fx-background-color: FFD700;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.template.MainController">
    <children>
+      <Label layoutX="75.0" layoutY="180.0" text="ID" textFill="WHITE" />
+      <TextField fx:id="txtId" layoutX="103.0" layoutY="175.0" prefWidth="50.0" />
+
+      <Label fx:id="lblMensagem" layoutX="103.0" layoutY="340.0" prefHeight="20.0" prefWidth="300.0" text="">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
       <ImageView fitHeight="462.0" fitWidth="829.0" layoutY="2.0" nodeOrientation="INHERIT" onMouseClicked="#carregarCampos" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../../Downloads/Gemini_Generated_Image_3j0l393j0l393j0l.png" />
