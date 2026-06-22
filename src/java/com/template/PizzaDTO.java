@@ -8,11 +8,11 @@ public class PizzaDTO {
     private Double valor;
     private Boolean disponivel;
 
-    // Construtor vazio
+
     public PizzaDTO() {
     }
 
-    // Construtor completo
+
     public PizzaDTO(int id, String sabor, String descricao, Double valor, Boolean disponivel) {
         this.id = id;
         this.sabor = sabor;
@@ -21,7 +21,7 @@ public class PizzaDTO {
         this.disponivel = disponivel;
     }
 
-    // Getters e Setters
+
     public int getId() {
         return id;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MainController {
 
-    // ID temporário para controle interno (já que não há txtId no FXML)
+
     private int idSelecionado = -1;
 
     @FXML private TextField txtId;
@@ -22,12 +22,12 @@ public class MainController {
     @FXML private TextField txtDescricao;
     @FXML private TextField txttValor;
 
-    // LINHA CORRIGIDA: A declaração que estava faltando para sumir com os 4 erros!
+
     @FXML private CheckBox chkDisponivel;
 
     @FXML private Label lblMensagem;
 
-    // Tabela e Colunas
+
     @FXML private TableView<PizzaDTO> tblPizza;
     @FXML private TableColumn<PizzaDTO, Integer> colId;
     @FXML private TableColumn<PizzaDTO, String> colSabor;
