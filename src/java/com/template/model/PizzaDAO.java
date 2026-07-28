@@ -1,4 +1,6 @@
-package com.template;
+package com.template.model;
+
+import com.template.Conexao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,12 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class PizzaDAO {
-
-    private static final Logger logger = Logger.getLogger(PizzaDAO.class.getName());
 
     public void cadastrarPizza(PizzaDTO pizza) {
         String sql = "INSERT INTO pizzas (sabor, descricao, valor, disponivel) VALUES (?, ?, ?, ?)";
@@ -25,10 +23,8 @@ public class PizzaDAO {
             ps.setBoolean(4, pizza.isDisponivel());
             ps.executeUpdate();
 
-            logger.info("Pizza gravada com sucesso!");
-
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao gravar pizza", e);
+            e.printStackTrace();
         }
     }
 
@@ -51,10 +47,8 @@ public class PizzaDAO {
                 lista.add(pizza);
             }
 
-            logger.info("Pizzas listadas do banco com sucesso!");
-
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao listar pizzas", e);
+            e.printStackTrace();
         }
 
         return lista;
@@ -73,10 +67,8 @@ public class PizzaDAO {
             ps.setInt(5, pizza.getId());
             ps.executeUpdate();
 
-            logger.info("Pizza alterada com sucesso!");
-
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao alterar pizza", e);
+            e.printStackTrace();
         }
     }
 
@@ -89,10 +81,8 @@ public class PizzaDAO {
             ps.setInt(1, id);
             ps.executeUpdate();
 
-            logger.info("Pizza excluida com sucesso!");
-
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao excluir pizza", e);
+            e.printStackTrace();
         }
     }
 }
