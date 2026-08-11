@@ -3,6 +3,7 @@ package com.template.controller;
 import com.template.model.PizzaDAO;
 import com.template.model.PizzaDTO;
 import com.template.util.ExibirMensagem;
+import com.template.validator.PizzaValidator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +36,9 @@ public class MainController {
     @FXML private Button btnExcluir;
     @FXML private Button btnLimpar;
 
+    // Instância do validador
+    private final PizzaValidator pizzaValidator = new PizzaValidator();
+
     @FXML
     private void initialize() {
         if (colId != null) colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -43,11 +47,9 @@ public class MainController {
         colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
         colDisponivel.setCellValueFactory(new PropertyValueFactory<>("disponivel"));
 
-
         if (txtId != null) {
             txtId.setEditable(false);
         }
-
 
         txttValor.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*([\\.,]\\d*)?")) {
@@ -77,8 +79,8 @@ public class MainController {
 
     @FXML
     private void btnCadastrarAction(ActionEvent event) {
-        if (txtSabor.getText().trim().isEmpty() || txttValor.getText().trim().isEmpty()) {
-            ExibirMensagem.showError("Erro: Sabor e Valor são obrigatórios!");
+        // Validação enviada para o PizzaValidator
+        if (!pizzaValidator.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
             return;
         }
 
@@ -86,9 +88,7 @@ public class MainController {
             PizzaDTO objpizzadto = new PizzaDTO();
             objpizzadto.setSabor(txtSabor.getText());
             objpizzadto.setDescricao(txtDescricao.getText());
-
-            String valorTexto = txttValor.getText().replace(",", ".");
-            objpizzadto.setValor(Double.parseDouble(valorTexto));
+            objpizzadto.setValor(Double.parseDouble(txttValor.getText().replace(",", ".")));
             objpizzadto.setDisponivel(chkDisponivel.isSelected());
 
             PizzaDAO objpizzadao = new PizzaDAO();
@@ -97,8 +97,8 @@ public class MainController {
             ExibirMensagem.showInfo("Pizza cadastrada com sucesso!");
             carregarPizzas();
             limparCampos();
-        } catch (NumberFormatException e) {
-            ExibirMensagem.showError("Erro: O valor informado é inválido.");
+        } catch (Exception e) {
+            ExibirMensagem.showError("Erro ao cadastrar pizza no banco de dados.");
         }
     }
 
@@ -111,8 +111,7 @@ public class MainController {
             return;
         }
 
-        if (txtSabor.getText().trim().isEmpty() || txttValor.getText().trim().isEmpty()) {
-            ExibirMensagem.showError("Erro: Sabor e Valor são obrigatórios!");
+        if (!pizzaValidator.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
             return;
         }
 
@@ -121,9 +120,7 @@ public class MainController {
             objpizzadto.setId(pizzaSelecionada.getId());
             objpizzadto.setSabor(txtSabor.getText());
             objpizzadto.setDescricao(txtDescricao.getText());
-
-            String valorTexto = txttValor.getText().replace(",", ".");
-            objpizzadto.setValor(Double.parseDouble(valorTexto));
+            objpizzadto.setValor(Double.parseDouble(txttValor.getText().replace(",", ".")));
             objpizzadto.setDisponivel(chkDisponivel.isSelected());
 
             PizzaDAO objpizzadao = new PizzaDAO();
@@ -132,8 +129,8 @@ public class MainController {
             ExibirMensagem.showInfo("Pizza atualizada com sucesso!");
             carregarPizzas();
             limparCampos();
-        } catch (NumberFormatException e) {
-            ExibirMensagem.showError("Erro: Verifique o preço digitado.");
+        } catch (Exception e) {
+            ExibirMensagem.showError("Erro ao atualizar a pizza.");
         }
     }
 
