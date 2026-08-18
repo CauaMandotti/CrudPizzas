@@ -1,54 +1,32 @@
 package com.template.validator;
 
-
 import com.template.util.ExibirMensagem;
 
 public class PizzaValidator {
 
     public boolean validarPizza(String sabor, String descricao, String valorTexto) {
-        if (!validarSabor(sabor)) {
+        // 1. Validação do Sabor (Obrigatório)
+        Validador<String> validadorSabor = new CampoObrigatorioValidador("Sabor", sabor);
+        if (!validadorSabor.validar(validadorSabor.getValor())) {
+            ExibirMensagem.showError(validadorSabor.getMensagemErro());
             return false;
         }
 
-        if (!validarDescricao(descricao)) {
+        // 2. Validação da Descrição (Obrigatório)
+        Validador<String> validadorDescricao = new CampoObrigatorioValidador("Descrição", descricao);
+        if (!validadorDescricao.validar(validadorDescricao.getValor())) {
+            ExibirMensagem.showError(validadorDescricao.getMensagemErro());
             return false;
         }
 
-        if (!validarValor(valorTexto)) {
+        // 3. Validação do Valor (Obrigatório)
+        Validador<String> validadorValor = new CampoObrigatorioValidador("Valor", valorTexto);
+        if (!validadorValor.validar(validadorValor.getValor())) {
+            ExibirMensagem.showError(validadorValor.getMensagemErro());
             return false;
         }
 
-        return true;
-    }
-
-    private boolean validarSabor(String sabor) {
-        if (sabor == null || sabor.trim().isEmpty()) {
-            ExibirMensagem.showError("O campo Sabor é obrigatório!");
-            return false;
-        }
-
-        if (sabor.trim().length() < 3) {
-            ExibirMensagem.showError("O Sabor deve ter pelo menos 3 caracteres!");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean validarDescricao(String descricao) {
-        if (descricao != null && descricao.length() > 100) {
-            ExibirMensagem.showError("A Descrição não pode ter mais de 100 caracteres!");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validarValor(String valorTexto) {
-        if (valorTexto == null || valorTexto.trim().isEmpty()) {
-            ExibirMensagem.showError("O campo Valor é obrigatório!");
-            return false;
-        }
-
+        // 4. Validação Formato do Valor (Numérico e maior que zero)
         try {
             double valor = Double.parseDouble(valorTexto.replace(",", "."));
             if (valor <= 0) {
