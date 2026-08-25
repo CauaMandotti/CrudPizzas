@@ -86,7 +86,7 @@ public class MainController {
                 ExibirMensagem.showInfo("Pizza excluída com sucesso!");
                 atualizarTela();
             } catch (Exception e) {
-                ExibirMensagem.showError("Erro ao excluir o registro.");
+                ExibirMensagem.showError("Erro ao excluir o registro do banco de dados.");
             }
         }
     }
@@ -105,10 +105,8 @@ public class MainController {
         atualizarTela();
     }
 
-
-
-    // junta o processo de montar DTO, chamar DAO, tratar mensagens e recarregar a tela
     private void salvarOuAtualizarPizza(Integer id, String operacao, String mensagemSucesso) {
+        // Validação desacoplada via OCP no PizzaValidator
         if (!pizzaValidator.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
             return;
         }
@@ -129,7 +127,6 @@ public class MainController {
         }
     }
 
-    // Evita ter que repetir os getters e conversões em cadastrar e alterar
     private PizzaDTO criarDTOComDadosDoFormulario(Integer id) {
         PizzaDTO dto = new PizzaDTO();
         if (id != null) {
@@ -141,7 +138,6 @@ public class MainController {
         dto.setDisponivel(chkDisponivel.isSelected());
         return dto;
     }
-
 
     private void atualizarTela() {
         PizzaFormUtil.limparCampos(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel);

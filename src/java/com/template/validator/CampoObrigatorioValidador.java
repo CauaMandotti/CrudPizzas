@@ -1,6 +1,6 @@
 package com.template.validator;
 
-public class CampoObrigatorioValidador implements Validador<String> {
+public class CampoObrigatorioValidador implements Validator<String> {
     private final String nomeCampo;
     private final String valor;
 
@@ -11,7 +11,7 @@ public class CampoObrigatorioValidador implements Validador<String> {
 
     @Override
     public boolean validar(String valorAtual) {
-        return valorAtual != null && !valorAtual.trim().isEmpty();
+        return this.valor != null && !this.valor.trim().isEmpty();
     }
 
     @Override
@@ -21,6 +21,6 @@ public class CampoObrigatorioValidador implements Validador<String> {
 
     @Override
     public String getValor() {
-        return this.valor;
+        return valor;
     }
 }

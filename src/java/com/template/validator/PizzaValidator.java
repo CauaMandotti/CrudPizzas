@@ -1,41 +1,29 @@
 package com.template.validator;
 
 import com.template.util.ExibirMensagem;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PizzaValidator {
 
     public boolean validarPizza(String sabor, String descricao, String valorTexto) {
-        // 1. Validação do Sabor (Obrigatório)
-        Validador<String> validadorSabor = new CampoObrigatorioValidador("Sabor", sabor);
-        if (!validadorSabor.validar(validadorSabor.getValor())) {
-            ExibirMensagem.showError(validadorSabor.getMensagemErro());
-            return false;
-        }
+        // Lista de validadores polimórficos
+        List<Validator<String>> validadores = new ArrayList<>();
 
-        // 2. Validação da Descrição (Obrigatório)
-        Validador<String> validadorDescricao = new CampoObrigatorioValidador("Descrição", descricao);
-        if (!validadorDescricao.validar(validadorDescricao.getValor())) {
-            ExibirMensagem.showError(validadorDescricao.getMensagemErro());
-            return false;
-        }
+        // Validações de campos obrigatórios
+        validadores.add(new CampoObrigatorioValidador("Sabor", sabor));
+        validadores.add(new CampoObrigatorioValidador("Descrição", descricao));
+        validadores.add(new CampoObrigatorioValidador("Valor", valorTexto));
 
-        // 3. Validação do Valor (Obrigatório)
-        Validador<String> validadorValor = new CampoObrigatorioValidador("Valor", valorTexto);
-        if (!validadorValor.validar(validadorValor.getValor())) {
-            ExibirMensagem.showError(validadorValor.getMensagemErro());
-            return false;
-        }
+        // Validação específica para garantir valor numérico maior que zero
+        validadores.add(new ValorPositivoValidador("Valor", valorTexto));
 
-        // 4. Validação Formato do Valor (Numérico e maior que zero)
-        try {
-            double valor = Double.parseDouble(valorTexto.replace(",", "."));
-            if (valor <= 0) {
-                ExibirMensagem.showError("O valor da pizza deve ser maior que R$ 0,00!");
+        // Loop polimórfico conforme o slide do OCP
+        for (Validator<String> validador : validadores) {
+            if (!validador.validar(validador.getValor())) {
+                ExibirMensagem.showError(validador.getMensagemErro());
                 return false;
             }
-        } catch (NumberFormatException e) {
-            ExibirMensagem.showError("Informe um valor numérico válido!");
-            return false;
         }
 
         return true;
