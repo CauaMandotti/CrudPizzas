@@ -1,7 +1,7 @@
 package com.template.util;
 
-import com.template.model.PizzaDAO;
-import com.template.model.PizzaDTO;
+import com.template.dao.IPizzaDAO;
+import com.template.dto.PizzaDTO;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,9 +21,8 @@ public class PizzaTableUtil {
         colDisponivel.setCellValueFactory(new PropertyValueFactory<>("disponivel"));
     }
 
-    public static void carregarPizzas(TableView<PizzaDTO> tblPizza) {
-        PizzaDAO objpizzadao = new PizzaDAO();
-        List<PizzaDTO> listaPizzas = objpizzadao.selecionarPizzas();
+    public static void carregarPizzas(TableView<PizzaDTO> tblPizza, IPizzaDAO pizzaDAO) {
+        List<PizzaDTO> listaPizzas = pizzaDAO.selecionarPizzas();
 
         tblPizza.getItems().clear();
         if (listaPizzas != null) {

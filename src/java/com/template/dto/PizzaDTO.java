@@ -1,17 +1,15 @@
-package com.template.model;
+package com.template.dto;
 
 public class PizzaDTO {
-
     private int id;
     private String sabor;
     private String descricao;
-    private double valor;
+    private Double valor;
     private boolean disponivel;
 
-    public PizzaDTO() {
-    }
+    public PizzaDTO() {}
 
-    public PizzaDTO(int id, String sabor, String descricao, double valor, boolean disponivel) {
+    public PizzaDTO(int id, String sabor, String descricao, Double valor, boolean disponivel) {
         this.id = id;
         this.sabor = sabor;
         this.descricao = descricao;
@@ -43,11 +41,11 @@ public class PizzaDTO {
         this.descricao = descricao;
     }
 
-    public double getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 

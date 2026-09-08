@@ -1,11 +1,11 @@
 package com.template.controller;
 
-import com.template.model.PizzaDAO;
-import com.template.model.PizzaDTO;
+import com.template.dao.IPizzaDAO;
+import com.template.dto.PizzaDTO;
 import com.template.util.ExibirMensagem;
 import com.template.util.PizzaFormUtil;
 import com.template.util.PizzaTableUtil;
-import com.template.validator.PizzaValidator;
+import com.template.validator.IPizzaValidador;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,8 +36,15 @@ public class MainController {
     @FXML private Button btnExcluir;
     @FXML private Button btnLimpar;
 
-    private final PizzaValidator pizzaValidator = new PizzaValidator();
-    private final PizzaDAO pizzaDAO = new PizzaDAO();
+    // Dependências declaradas via Interfaces abstraídas (DIP - SOLID)
+    private final IPizzaValidador pizzaValidador;
+    private final IPizzaDAO pizzaDAO;
+
+    // Injeção de Dependência por construtor (Requisito 6)
+    public MainController(IPizzaValidador pizzaValidador, IPizzaDAO pizzaDAO) {
+        this.pizzaValidador = pizzaValidador;
+        this.pizzaDAO = pizzaDAO;
+    }
 
     @FXML
     private void initialize() {
@@ -47,44 +54,52 @@ public class MainController {
             txtId.setEditable(false);
         }
 
-        txttValor.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*([\\.,]\\d*)?")) {
-                txttValor.setText(oldValue);
-            }
-        });
-
-        atualizarTela();
+        PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
     }
 
     @FXML
     private void btnCadastrarAction(ActionEvent event) {
-        salvarOuAtualizarPizza(null, "cadastrar", "Pizza cadastrada com sucesso!");
+        if (!pizzaValidador.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
+            return;
+        }
+
+        try {
+            PizzaDTO dto = PizzaFormUtil.criarDTOComDadosDoFormulario(null, txtSabor, txtDescricao, txttValor, chkDisponivel);
+            pizzaDAO.cadastrarPizza(dto);
+            ExibirMensagem.showInfo("Pizza cadastrada com sucesso!");
+            PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
+        } catch (Exception e) {
+            ExibirMensagem.showError("Erro ao processar a operação no banco de dados.");
+        }
     }
 
     @FXML
     private void btnAlterarAction(ActionEvent event) {
         PizzaDTO selecionada = tblPizza.getSelectionModel().getSelectedItem();
-        if (selecionada == null) {
-            ExibirMensagem.showError("Selecione uma pizza na tabela para alterar.");
+
+        if (!pizzaValidador.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
             return;
         }
 
-        salvarOuAtualizarPizza(selecionada.getId(), "alterar", "Pizza atualizada com sucesso!");
+        try {
+            PizzaDTO dto = PizzaFormUtil.criarDTOComDadosDoFormulario(selecionada.getId(), txtSabor, txtDescricao, txttValor, chkDisponivel);
+            pizzaDAO.alterarPizza(dto);
+            ExibirMensagem.showInfo("Pizza atualizada com sucesso!");
+            PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
+        } catch (Exception e) {
+            ExibirMensagem.showError("Erro ao processar a operação no banco de dados.");
+        }
     }
 
     @FXML
     private void btnExcluirAction(ActionEvent event) {
         PizzaDTO selecionada = tblPizza.getSelectionModel().getSelectedItem();
-        if (selecionada == null) {
-            ExibirMensagem.showError("Selecione uma pizza para excluir.");
-            return;
-        }
 
         if (ExibirMensagem.showConfirmation("Tem certeza que deseja excluir a pizza " + selecionada.getSabor() + "?")) {
             try {
                 pizzaDAO.excluirPizza(selecionada.getId());
                 ExibirMensagem.showInfo("Pizza excluída com sucesso!");
-                atualizarTela();
+                PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
             } catch (Exception e) {
                 ExibirMensagem.showError("Erro ao excluir o registro do banco de dados.");
             }
@@ -102,47 +117,6 @@ public class MainController {
 
     @FXML
     private void btnLimparAction(ActionEvent event) {
-        atualizarTela();
-    }
-
-    private void salvarOuAtualizarPizza(Integer id, String operacao, String mensagemSucesso) {
-        // Validação desacoplada via OCP no PizzaValidator
-        if (!pizzaValidator.validarPizza(txtSabor.getText(), txtDescricao.getText(), txttValor.getText())) {
-            return;
-        }
-
-        try {
-            PizzaDTO dto = criarDTOComDadosDoFormulario(id);
-
-            if ("cadastrar".equals(operacao)) {
-                pizzaDAO.cadastrarPizza(dto);
-            } else if ("alterar".equals(operacao)) {
-                pizzaDAO.alterarPizza(dto);
-            }
-
-            ExibirMensagem.showInfo(mensagemSucesso);
-            atualizarTela();
-        } catch (Exception e) {
-            ExibirMensagem.showError("Erro ao processar a operação no banco de dados.");
-        }
-    }
-
-    private PizzaDTO criarDTOComDadosDoFormulario(Integer id) {
-        PizzaDTO dto = new PizzaDTO();
-        if (id != null) {
-            dto.setId(id);
-        }
-        dto.setSabor(txtSabor.getText());
-        dto.setDescricao(txtDescricao.getText());
-        dto.setValor(Double.parseDouble(txttValor.getText().replace(",", ".")));
-        dto.setDisponivel(chkDisponivel.isSelected());
-        return dto;
-    }
-
-    private void atualizarTela() {
-        PizzaFormUtil.limparCampos(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel);
-        tblPizza.getSelectionModel().clearSelection();
-        PizzaFormUtil.ajustarBotoes(btnAlterar, btnExcluir, false);
-        PizzaTableUtil.carregarPizzas(tblPizza);
+        PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
     }
 }

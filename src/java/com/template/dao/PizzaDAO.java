@@ -1,6 +1,7 @@
-package com.template.model;
+package com.template.dao;
 
 import com.template.Conexao;
+import com.template.dto.PizzaDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PizzaDAO {
+public class PizzaDAO implements IPizzaDAO {
 
+    @Override
     public void cadastrarPizza(PizzaDTO pizza) {
         String sql = "INSERT INTO pizzas (sabor, descricao, valor, disponivel) VALUES (?, ?, ?, ?)";
 
@@ -28,6 +30,7 @@ public class PizzaDAO {
         }
     }
 
+    @Override
     public List<PizzaDTO> selecionarPizzas() {
         String sql = "SELECT * FROM pizzas ORDER BY id";
         List<PizzaDTO> lista = new ArrayList<>();
@@ -54,6 +57,7 @@ public class PizzaDAO {
         return lista;
     }
 
+    @Override
     public void alterarPizza(PizzaDTO pizza) {
         String sql = "UPDATE pizzas SET sabor = ?, descricao = ?, valor = ?, disponivel = ? WHERE id = ?";
 
@@ -72,6 +76,7 @@ public class PizzaDAO {
         }
     }
 
+    @Override
     public void excluirPizza(int id) {
         String sql = "DELETE FROM pizzas WHERE id = ?";
 
