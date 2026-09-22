@@ -54,7 +54,11 @@ public class MainController {
             txtId.setEditable(false);
         }
 
-        PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
+        try {
+            PizzaFormUtil.atualizarTela(txtId, txtSabor, txtDescricao, txttValor, chkDisponivel, tblPizza, btnAlterar, btnExcluir, pizzaDAO);
+        } catch (Exception e) {
+            ExibirMensagem.showError("Erro ao conectar ao banco de dados PostgreSQL.\nVerifique se o banco de dados está rodando.");
+        }
     }
 
     @FXML
